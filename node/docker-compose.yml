@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  auth-api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - .:/app
+      - /app/node_modules  # node_modules'u korumak için data volume
+    networks:
+      - auth-network
+
+networks:
+  auth-network:
+    driver: bridge

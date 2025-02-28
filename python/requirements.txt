@@ -1,0 +1,8 @@
+Flask==3.0.3
+Flask-SocketIO==5.3.6
+google-generativeai==0.8.2
+python-dotenv==1.0.1
+eventlet==0.36.1
+flask_jwt_extended
+flask_cors
+psycopg2
