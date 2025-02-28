@@ -511,13 +511,13 @@ def end_game(lobby_id):
 
 @app.route("/")
 def index():
-    logging.info("Rendering index page")
-    return render_template("index.html")
+    logging.info("Returning API status")
+    return jsonify({"message": "Quiz Game API is running", "version": "1.0"}), 200
 
-@app.route("/lobbies")
-def lobbies_page():
-    logging.info("Rendering lobbies page")
-    return render_template("lobbies.html", lobbies=lobbies)
+@app.route("/api/lobbies", methods=["GET"])
+def get_lobbies_json():
+    logging.info("Returning lobbies as JSON")
+    return jsonify(lobbies), 200
 
 @app.route("/create_lobby", methods=["POST"])
 def create_lobby():
@@ -536,23 +536,29 @@ def create_lobby():
         'status': 'waiting'
     }
     logging.info(f"New lobby created: {lobby_id} by {username}")
-    return jsonify({'lobby_id': lobby_id, 'username': username, 'credits': credits})
+    return jsonify({'lobby_id': lobby_id, 'username': username, 'credits': credits}), 201
 
-@app.route("/lobby/<lobby_id>")
-def lobby(lobby_id):
+@app.route("/api/lobby/<lobby_id>", methods=["GET"])
+def get_lobby_json(lobby_id):
     if lobby_id not in lobbies:
         logging.error(f"Lobby {lobby_id} not found")
-        return "Lobby not found", 404
-    logging.info(f"Rendering lobby page for {lobby_id}")
-    return render_template("lobby.html", lobby_id=lobby_id)
+        return jsonify({"error": "Lobby not found"}), 404
+    logging.info(f"Returning lobby {lobby_id} as JSON")
+    return jsonify(lobbies[lobby_id]), 200
 
-@app.route("/game/<lobby_id>")
-def game(lobby_id):
+@app.route("/api/game/<lobby_id>", methods=["GET"])
+def get_game_json(lobby_id):
     if lobby_id not in lobbies or lobbies[lobby_id]['status'] != 'playing':
         logging.error(f"Game not found or not started for lobby {lobby_id}")
-        return "Game not found or not started", 404
-    logging.info(f"Rendering game page for {lobby_id}")
-    return render_template("game.html", lobby_id=lobby_id)
+        return jsonify({"error": "Game not found or not started"}), 404
+    logging.info(f"Returning game state for {lobby_id} as JSON")
+    return jsonify({
+        "lobby_id": lobby_id,
+        "current_question": lobbies[lobby_id].get('current_question_data', {}),
+        "players": lobbies[lobby_id]['players'],
+        "scores": lobbies[lobby_id]['scores'],
+        "status": "playing"
+    }), 200
 
 @socketio.on("join_lobby")
 def handle_join_lobby(data):
