@@ -657,14 +657,14 @@ def create_lobby():
 
     lobbies[lobby_id] = {        
         'owner': username,
-        'players': {username: {'credits': credits, 'ready': False}},
+        'players': {username: {'ready': False}},
         'scores': {username: 0},
         'bet': bet,
         'topic': topic,
         'status': 'waiting'
     }
     logging.info(f"New lobby created: {lobby_id} by {username}")
-    return jsonify({'lobby_id': lobby_id, 'username': username, 'credits': credits}), 201
+    return jsonify({'lobby_id': lobby_id, 'username': username}), 201
 
 @app.route("/api/lobby/<lobby_id>", methods=["GET"])
 def get_lobby_json(lobby_id):
@@ -701,8 +701,6 @@ def handle_join_lobby(data):
     """
     lobby_id = data['lobby_id']
     username = data['username']
-    credits = int(data['credits'])
-    
     if lobby_id not in lobbies:
         emit("error", {"message": "Lobby not found"}, to=request.sid)
         logging.error(f"Join attempt to non-existent lobby: {lobby_id}")
@@ -716,7 +714,7 @@ def handle_join_lobby(data):
         emit("lobby_update", lobby, room=lobby_id)
         return
     
-    lobby['players'][username] = {'credits': credits, 'ready': False}
+    lobby['players'][username] = {'ready': False}
     lobby['scores'][username] = 0
     join_room(lobby_id) # Join the lobby room
     logging.info(f"{username} joined lobby {lobby_id}")
