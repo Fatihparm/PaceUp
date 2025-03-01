@@ -27,7 +27,7 @@ A real-time, blockchain-integrated multiplayer quiz game API built with Flask an
 
 - Access to a blockchain network supporting `state.Transfer` and `blob.Submit` methods (e.g., Pops One)
 
-## Installation
+## Backend Installation
 
 1. **Clone the Repository**:
    ```bash
@@ -59,6 +59,44 @@ A real-time, blockchain-integrated multiplayer quiz game API built with Flask an
     ```
 
 - The API will start on http://localhost:5001.
+
+## Frontend Installation
+
+To set up the project, follow these steps:
+
+### 1. Install Dependencies
+
+```
+yarn install
+```
+
+### 2. Start Development Server
+
+```
+yarn dev
+```
+
+## Technologies Used
+
+This project is built using:
+
+- **Next.js** (15.1.7)
+- **React** (19.0.0)
+- **TailwindCSS** (3.4.1)
+- **Socket.io-client** (4.8.1)
+- **Ethers.js** (6.13.5)
+- **Web3.js** (4.16.0)
+- **WalletConnect**
+- **CosmJS**
+
+## Scripts
+
+The available scripts are:
+
+- `yarn dev` – Starts the development server with Turbopack.
+- `yarn build` – Builds the project for production.
+- `yarn start` – Runs the production build.
+- `yarn lint` – Lints the project.
 
 ## API Endpoints
 
